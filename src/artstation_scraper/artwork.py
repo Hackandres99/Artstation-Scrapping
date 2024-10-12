@@ -6,7 +6,7 @@ from datetime import datetime
 
 @dataclass
 class Artwork:
-    id: ObjectId
+    _id: ObjectId
     title: str
     description: str
     date: datetime
