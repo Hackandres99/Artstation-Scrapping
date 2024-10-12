@@ -12,7 +12,7 @@ class ArtstationScraper(ScraperInterface):
 
     def get_html(self, url: str) -> BeautifulSoup:
         self.driver.get(url)
-        sleep(3)
+        sleep(5)
         content = self.driver.page_source
         html = BeautifulSoup(content, 'html.parser')
         return html
