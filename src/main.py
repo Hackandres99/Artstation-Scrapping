@@ -28,7 +28,7 @@ def main():
         artwork_Html = artstation_Scraper.get_html(artwork)
         artwork = artstation_Scraper.get_artwork_data(artwork_Html)
         ArtworkRepository().save_artwork(artwork)
-        print(f'Artwork {i + 1} guardado exitosamente.')
+        print(f'Artwork {i + 1} saved successfully.')
 
 
 if __name__ == '__main__':
