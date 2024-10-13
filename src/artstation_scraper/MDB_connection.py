@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from dataclasses import asdict
-from .artwork import Artwork
+from .models.project.artwork import Artwork
 from pymongo import MongoClient
 
 

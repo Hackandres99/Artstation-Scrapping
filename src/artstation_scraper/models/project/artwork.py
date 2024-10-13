@@ -1,18 +1,18 @@
 from dataclasses import dataclass
 from typing import List, Dict
-from bson import ObjectId
 from datetime import datetime
+from .comment import Comment
 
 
 @dataclass
 class Artwork:
-    _id: ObjectId
     title: str
     description: str
     date: datetime
     likes: int
     views: int
-    comments: int
+    threads: int
+    comments: List[Comment]
     software: Dict[str, str]
     tags: List[str]
     images: List[str]

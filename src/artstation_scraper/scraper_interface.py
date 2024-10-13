@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
-from .artwork import Artwork
+from .models.project.artwork import Artwork
 
 
 class ScraperInterface(ABC):
