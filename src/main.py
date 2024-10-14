@@ -15,8 +15,7 @@ def wdriver(port: int):
 
 
 def main():
-    artist = 'tsmith3d'
-    # artist = input('Enter artist name: ')
+    artist = 'tsmith3d' # Enter artist name
     artstation_Url = 'https://www.artstation.com/'
     artist_Url = artstation_Url + artist
     driver = wdriver(9222)
