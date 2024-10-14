@@ -15,7 +15,7 @@ def wdriver(port: int):
 
 
 def main():
-    artist = 'tsmith3d' # Enter artist name
+    artist = 'onyricstudio'  # Enter artist name
     artstation_Url = 'https://www.artstation.com/'
     artist_Url = artstation_Url + artist
     driver = wdriver(9222)
@@ -25,7 +25,7 @@ def main():
 
     for i, artwork in enumerate(arttist_Artworks):
         # To choose the artwork, change index
-        artwork_index = 27
+        artwork_index = 44
         if i == artwork_index - 1:
             artwork_Html = artstation_Scraper.get_html(artwork)
             artwork = artstation_Scraper.get_artwork_data(artwork_Html)
