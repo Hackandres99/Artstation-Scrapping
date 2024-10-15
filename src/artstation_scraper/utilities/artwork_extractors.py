@@ -3,6 +3,7 @@ from bson import ObjectId
 from .numbers import suffix
 from dateutil import parser
 from ..models.project.comment import Comment, User, Message
+from ..models.software_proficiency import Sofware
 
 
 def _extract_title(artwork: BeautifulSoup) -> str:
@@ -40,15 +41,15 @@ def _extract_threads(artwork: BeautifulSoup) -> int:
     ).next_sibling.next_sibling)
 
 
-def _extract_softwares(artwork: BeautifulSoup) -> dict:
-    softwares = {}
+def _extract_softwares(artwork: BeautifulSoup) -> list:
+    softwares = []
     softwares_html = artwork.find_all('a', {'class': 'project-software-item'})
     for software in softwares_html:
         name = software.find(
             'span', {'class': 'project-software-name'}
         ).get_text()
         img = software.find('img').attrs['src']
-        softwares[name] = img
+        softwares.append(Sofware(name, img))
     return softwares
 
 
