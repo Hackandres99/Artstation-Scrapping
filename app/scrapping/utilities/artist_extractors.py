@@ -4,27 +4,50 @@ from ..models.artist.resume import (
     Social, Sofware, Production, Experience
 )
 from ..models.artist.period import Period
+from ..models.artist.artwork_preview import Preview
 
 
-def _extract_resume_page_link(artist: BeautifulSoup) -> str:
-    _page = artist.find(
-        'ul', {'class': 'addition-info-list'}
-    ).find('a').attrs['href']
-    resume_page_link = f'{_page}/resume'
-    return resume_page_link
+def extract_id_and_resume(artist: BeautifulSoup) -> list:
+    id_and_resume = ['', '']
+    _page_html = artist.find(
+    'ul', {'class': 'addition-info-list'}
+    )
+
+    id_html = _page_html.find('a').get_text() if _page_html else ''
+    end = id_html[: id_html.rindex('.')].rindex('.') if id_html != '' else 0
+    id_and_resume[0] = id_html[: end] if end != 0 else ''
+
+    _page = _page_html.find('a').attrs['href'] if _page_html else ''
+    id_and_resume[1] = f'{_page}/resume'
+        
+    return id_and_resume
 
 
-def _extract_follows(artist: BeautifulSoup) -> tuple[int, int]:
-    conections_html = artist.find(
-        'div', {'class': 'connections'}).find_all(
-            'span', {'class': 'connection-item-count'}
-        )
-    followers = suffix(conections_html[0].get_text())
-    following = suffix(conections_html[1].get_text())
-    return followers, following
+def extract_follows(artist: BeautifulSoup) -> list:
+    follows = [0, 0]
+    conections_html = artist.find('div', {'class': 'connections'})
+    conections_html = conections_html.find_all(
+        'span', {'class': 'connection-item-count'}
+    ) if conections_html else '  '
+    followers_html = conections_html[0]
+    following_html = conections_html[1]
+    follows[0] = suffix(followers_html.get_text()) if followers_html != ' ' else 0
+    follows[1] = suffix(following_html.get_text()) if following_html != ' ' else 0
+    return follows
 
 
-def _extract_interests(artist: BeautifulSoup) -> list:
+def extract_artworks_count(artist: BeautifulSoup) -> int:
+    count_html = artist.find('page-header')
+    count_html = count_html.find(
+        'div', {'class': 'profile-page-info'}
+    ) if count_html else ''
+    count_text = count_html.get_text() if count_html else 0
+    end = count_text.index(' ') if count_text != 0 else 0
+    count = suffix(count_text[:end]) if end != 0 else 0
+    return count
+
+
+def extract_interests(artist: BeautifulSoup) -> list:
     sidebar_blocks = artist.find_all('h4')
     interests = []
     for block in sidebar_blocks:
@@ -35,53 +58,87 @@ def _extract_interests(artist: BeautifulSoup) -> list:
     return interests
 
 
-def _extract_artwork_urls(artist: BeautifulSoup) -> list:
-    artwork_urls = []
+def extract_artist_artwork_previews(
+    artist: BeautifulSoup, previews_number: int
+) -> list:
+    artwork_previews = []
     artworks = artist.find_all(
         'projects-list-item', {'class': 'gallery-grid-item'}
     )
-    for i, artwork in enumerate(artworks):
+    for order, artwork in enumerate(artworks):
         try:
-            artwork_url = artwork.find(
+
+            artwork_html = artwork.find(
                 'a', {'class': 'gallery-grid-link'}
-            ).attrs['href']
-            artwork_urls.append(artwork_url)
+            )
+            url = artwork_html.attrs['href'] if artwork_html else ''
+
+            start = url.rindex('/')
+            id = url[start + 1:]
+
+            image_html = artwork_html.find(
+                'img', {'class': 'gallery-grid-background-image'}
+            )
+            image = image_html.attrs['src'] if image_html else ''
+
+            title_html = artwork_html.find(
+                'div', {'class': 'gallery-grid-title'}
+            )
+            title = title_html.get_text() if title_html else ''
+            
+            if order == previews_number:
+                break
+            artwork_previews.append(Preview(id, order + 1, title, image, url))
         except Exception as err:
-            print(f'{i + 1}.- Artwork url error: {err.args}')
-    return artwork_urls
+            print(f'{order + 1}.- Artwork preview error: {err.args}')
+    if str(previews_number).isalpha():
+        return []
+    else:
+        if previews_number < 0:
+            return []
+    return artwork_previews
 
 
-def _extract_avatar(artist: BeautifulSoup) -> str:
-    return artist.find(
+def extract_avatar(artist: BeautifulSoup) -> str:
+    avatar_html = artist.find(
         'div', {'class': 'about-photo'}
-    ).find('img').attrs['src']
+    ).find('img')
+    avatar = avatar_html.attrs['src'] if avatar_html else ''
+    return avatar
 
 
-def _extract_name(artist: BeautifulSoup) -> str:
-    return artist.find(
+def extract_name(artist: BeautifulSoup) -> str:
+    name_html = artist.find(
         'div', {'class': 'about-name'}
-    ).get_text()
+    )
+    name = name_html.get_text() if name_html else ''
+    return name
 
-
-def _extract_headline(artist: BeautifulSoup) -> str:
-    return artist.find(
+def extract_headline(artist: BeautifulSoup) -> str:
+    headline_html = artist.find(
         'div', {'class': 'about-position'}
-    ).get_text()
+    )
+    headline = headline_html.get_text() if headline_html else ''
+    return headline
 
 
-def _extract_location(artist: BeautifulSoup) -> str:
-    return artist.find(
+def extract_location(artist: BeautifulSoup) -> str:
+    location_html = artist.find(
         'div', {'class': 'about-location'}
-    ).contents[1]
+    )
+    location = location_html.contents[1] if location_html else ''
+    return location
 
 
-def _extract_email(artist: BeautifulSoup) -> str:
-    return artist.find(
+def extract_email(artist: BeautifulSoup) -> str:
+    email_html = artist.find(
         'div', {'class': 'about-email'}
-    ).find('a').get_text()
+    ).find('a')
+    email = email_html.get_text() if email_html else ''
+    return email
 
 
-def _extract_socials(artist: BeautifulSoup) -> list:
+def extract_socials(artist: BeautifulSoup) -> list:
     socials = []
     socials_html = artist.find_all('div', {'class': 'so-item'})
     for social_html in socials_html:
@@ -94,7 +151,7 @@ def _extract_socials(artist: BeautifulSoup) -> list:
     return socials
 
 
-def _extract_sections(artist: BeautifulSoup) -> list:
+def extract_sections(artist: BeautifulSoup) -> list:
     sections = ['', '']
     sections_html = artist.find_all('h2')
     for section in sections_html:
@@ -105,7 +162,7 @@ def _extract_sections(artist: BeautifulSoup) -> list:
     return sections
 
 
-def _extract_skills(artist: BeautifulSoup) -> list:
+def extract_skills(artist: BeautifulSoup) -> list:
     skills = []
     skills_html = artist.find('div', {'class': 'tag-list'}).find_all('span')
     for skill in skills_html:
@@ -113,7 +170,7 @@ def _extract_skills(artist: BeautifulSoup) -> list:
     return skills
 
 
-def _extract_sofware_proficiency(artist: BeautifulSoup) -> list:
+def extract_sofware_proficiency(artist: BeautifulSoup) -> list:
     softwares = []
     softwares_html = artist.find_all('div', {'class': 'software-icon-item'})
     for software in softwares_html:
@@ -123,7 +180,7 @@ def _extract_sofware_proficiency(artist: BeautifulSoup) -> list:
     return softwares
 
 
-def _extract_productions(artist: BeautifulSoup) -> list:
+def extract_productions(artist: BeautifulSoup) -> list:
     productions = []
     productions_html = artist.find_all('li', {'class': 'production-item'})
     for production in productions_html:
@@ -145,7 +202,7 @@ def _extract_productions(artist: BeautifulSoup) -> list:
     return productions
 
 
-def _extract_experiences(artist: BeautifulSoup) -> list:
+def extract_experiences(artist: BeautifulSoup) -> list:
     experiences = []
     experiences_html = artist.find_all('li', {'class', 'experience-item'})
     for experience in experiences_html:

@@ -1,22 +1,17 @@
 from abc import ABC, abstractmethod
-from selenium.webdriver import Chrome
 from .scraper import ArtstationScraper
 from .models.project.artwork import Artwork
 from .models.artist.artist import Artist, Base
-
+from .models.artist.artwork_preview import Preview
 
 class ProcessingInterface(ABC):
 
     @abstractmethod
-    def get_driver(self, port: int) -> Chrome:
+    def _get_base_data(self) -> tuple[ArtstationScraper, Base]:
         ...
 
     @abstractmethod
-    def get_base_data(self) -> tuple[ArtstationScraper, Base, str]:
-        ...
-
-    @abstractmethod
-    def get_artist(self) -> Artist:
+    def get_artist(self) -> Artist | dict:
         ...
 
     @abstractmethod
@@ -24,5 +19,5 @@ class ProcessingInterface(ABC):
         ...
     
     @abstractmethod
-    def get_artworks(self) -> list[Artwork]:
+    def get_previews(self, previews_number: int) -> list[Preview]:
         ...

@@ -3,12 +3,11 @@ from typing import List
 from datetime import datetime
 from .comment import Comment
 from ..software_proficiency import Sofware
-from bson import ObjectId
 
 
 @dataclass
 class Artwork:
-    _id: ObjectId
+    id: str
     title: str
     description: str
     date: datetime

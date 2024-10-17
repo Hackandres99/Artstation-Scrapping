@@ -1,14 +1,13 @@
-from artstation_scraper.processing import Processing
+from scrapping.processing import Processing
 # from artstation_scraper.MDB_connection import ArtworkRepository
 
 
 def main():
     artist = 'tsmith3d'
     process = Processing(artist)
-    print(process.get_artist())
-    print(process.get_artwork(27))
-    # print(process.get_artworks())
-
+    # print(process.get_artist())
+    # print(process.get_artwork('0bBoG'))
+    print(process.get_previews(150))
     # ArtworkRepository().save_artwork(artwork)
     # print(f'Artwork {i + 1} saved successfully.')
 
