@@ -1,5 +1,5 @@
 # Artstation Scraper
-This program allow to get artworks of an artist on artstation 
+This program allow to get artist resume, artworks and artwork previews data of an artist on artstation 
 
 To make sure this program works correctly on your machine, it is needed to follow the next steps:
 
@@ -36,7 +36,7 @@ To make sure this program works correctly on your machine, it is needed to follo
 ## Configuration
 1. Configure environment variables:
 
-    Create a .env file in the root folder with the env vars on the MDB_connection.py file, where each var represent:
+    Create a .env file in the root folder with the env vars on the MDB_Atlas/connection.py file, where each var represent:
     - **MONGODB_USERNAME**=the user name on your MongoDB Atlas account.
     - **MONGODB_PASSWORD**=the password on your MongoDB Atlas account.
     - **MONGODB_HOST**=the host on your MongoDB Atlas account.
@@ -44,27 +44,7 @@ To make sure this program works correctly on your machine, it is needed to follo
     - **MONGODB_DATABASE**=here the database could be created with your artist, business or the  name you need.
 2. Establish the artist
 
-    On the main.py file there is a commented line where specifies the artist or author name of which the artworks will be acquired, you could descomment this line, so this is going to be ordered through the console
-
-## Files
-### MDB_connection.py
-This file establish the connection with MongoDB, with two methods that allow both to save and get artworks in the database, the methos to update and delete are not maked because this data collection has to be the same as that acquired in the artist's profile.
-### scraper_interface.py
-This file sets the behavior that the scraper.py has to follow.
-### artwork.py
-This file has the artwork data structure to be save on the Mongo database, feel free to remove or add the attributes you do not need to save on your on it.
-### scraper
-This is the file where data starts to be recollected through 3 methods imposed in scraper_interface.py
-1. get_html:
-
-    This method recieves the url of the artist in Artstation which returns the text of the page that will be transformed to an HTML structure that can understand the BS4 library
-2. get_artwork_urls:
-
-    Once configured the get_html method get_artwork_urls recives that html structure and starts to get the url of every artwork in the artist profile 
-3. get_artwork_data:
-    In this method are defined the rutes of each html data that have match the attributes seted in the artwork.py file
-### main.py
-Here two methods are difined where one is made to create a reusable Chrome driver and the other to establish the order of execution of each method of the scraper.py file 
+    On the main.py file there are operations where specifies the artist or author name of which the artworks will be acquired, there are also functions where you can specify the quantity or which artwork you disire to save
 
 ## Conclusion
 This program is made to obtain the data of artworks loaded in the profile of an Artstation artist, in an easy and fast way, thanks to the Web-scrapping technique.
