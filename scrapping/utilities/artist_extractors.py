@@ -10,7 +10,7 @@ from ..models.artist.artwork_preview import Preview
 def extract_id_and_resume(artist: BeautifulSoup) -> list:
     id_and_resume = ['', '']
     _page_html = artist.find(
-    'ul', {'class': 'addition-info-list'}
+        'ul', {'class': 'addition-info-list'}
     )
 
     id_html = _page_html.find('a').get_text() if _page_html else ''
@@ -19,7 +19,7 @@ def extract_id_and_resume(artist: BeautifulSoup) -> list:
 
     _page = _page_html.find('a').attrs['href'] if _page_html else ''
     id_and_resume[1] = f'{_page}/resume'
-        
+
     return id_and_resume
 
 
@@ -31,8 +31,12 @@ def extract_follows(artist: BeautifulSoup) -> list:
     ) if conections_html else '  '
     followers_html = conections_html[0]
     following_html = conections_html[1]
-    follows[0] = suffix(followers_html.get_text()) if followers_html != ' ' else 0
-    follows[1] = suffix(following_html.get_text()) if following_html != ' ' else 0
+    follows[0] = suffix(
+        followers_html.get_text()
+        ) if followers_html != ' ' else 0
+    follows[1] = suffix(
+        following_html.get_text()
+        ) if following_html != ' ' else 0
     return follows
 
 
@@ -59,7 +63,7 @@ def extract_interests(artist: BeautifulSoup) -> list:
 
 
 def extract_artist_artwork_previews(
-    artist: BeautifulSoup, previews_number: int
+    artist: BeautifulSoup, previews_number: int | str
 ) -> list:
     artwork_previews = []
     artworks = artist.find_all(
@@ -85,18 +89,17 @@ def extract_artist_artwork_previews(
                 'div', {'class': 'gallery-grid-title'}
             )
             title = title_html.get_text() if title_html else ''
-            
+
             if order == previews_number:
                 break
             artwork_previews.append(Preview(id, order + 1, title, image, url))
         except Exception as err:
             print(f'{order + 1}.- Artwork preview error: {err.args}')
+
     if str(previews_number).isalpha():
-        return []
+        return artwork_previews if previews_number == 'all' else []
     else:
-        if previews_number < 0:
-            return []
-    return artwork_previews
+        return artwork_previews if previews_number > 0 else []
 
 
 def extract_avatar(artist: BeautifulSoup) -> str:
@@ -113,6 +116,7 @@ def extract_name(artist: BeautifulSoup) -> str:
     )
     name = name_html.get_text() if name_html else ''
     return name
+
 
 def extract_headline(artist: BeautifulSoup) -> str:
     headline_html = artist.find(

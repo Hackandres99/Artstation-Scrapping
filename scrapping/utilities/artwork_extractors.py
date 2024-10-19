@@ -9,7 +9,6 @@ from ..models.project.comment import Comment, User, Message
 from ..models.software_proficiency import Sofware
 
 
-
 def extract_title(artwork: BeautifulSoup) -> str:
     title_html = artwork.find(
         'h3', {'class': 'project-description-title'}
@@ -87,6 +86,7 @@ def extract_images(artwork: BeautifulSoup) -> list:
         'img', {'class': 'img img-fluid block-center img-fit'}
     )]
 
+
 def extract_artist_url(artwork: BeautifulSoup) -> str:
     load_dotenv()
     artist_id_html = artwork.find(
@@ -96,20 +96,26 @@ def extract_artist_url(artwork: BeautifulSoup) -> str:
     artist_url = os.getenv('ARTSTATION_URL') + artist_id
     return artist_url
 
+
 def extract_user_info(comment_item: Tag):
     avatar_html = comment_item.find('img')
     avatar = avatar_html.attrs['src'] if avatar_html else ''
 
-    name_html = comment_item.find('img')
-    name = name_html.attrs['alt'] if name_html else ''
+    name_html = comment_item.find(
+        'div', {'class': 'project-comment-user'}
+    ).find('a')
+    name = name_html.get_text() if name_html else ''
 
     headline_html = comment_item.find(
         'div', {'class': 'project-comment-headline'}
     )
     headline = headline_html.attrs['title'] if headline_html else ''
-    author = True if comment_item.find(
+
+    author_html = name_html.find_next_sibling(
         'div', {'class': 'author-badge'}
-    ) else False
+    )
+    author = True if author_html else False
+
     return User(name, author, avatar, headline)
 
 

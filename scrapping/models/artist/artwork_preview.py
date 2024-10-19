@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Preview:
-    id: str
+    artwork_id: str
     order: int
     title: str
     image: str

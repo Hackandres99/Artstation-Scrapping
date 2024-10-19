@@ -47,12 +47,12 @@ class ArtstationScraper(ScraperInterface):
         self.driver = driver
 
     def get_html(
-        self, url: str, method: str, previews_number: int
+        self, url: str, method: str, previews_number: int | str = 0
     ) -> BeautifulSoup:
         self.driver.get(url)
         match method:
             case 'artwork':
-                sleep(2)
+                sleep(3)
                 open_nested_comments(self.driver)
             case 'previews':
                 scroll_to_bottom(self.driver, previews_number)
@@ -115,12 +115,12 @@ class ArtstationScraper(ScraperInterface):
             tags = extract_tags(artwork)
             images = extract_images(artwork)
             artist_url = extract_artist_url(artwork)
-        except Exception as err:
+        except Exception:
             return dict(message='Artwork not found')
-            
+
         return Artwork(artwork_id, title, description,
-                    date, likes, views, threads,
-                       comments, softwares,tags,
+                       date, likes, views, threads,
+                       comments, softwares, tags,
                        images, artist_url)
 
     def get_artist_artwork_previews(

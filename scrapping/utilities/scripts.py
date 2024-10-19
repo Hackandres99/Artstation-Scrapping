@@ -8,10 +8,13 @@ def scroll_to_bottom(driver, previews_number):
     )
     num = previews_number
     if str(num).isalpha():
-        num = 0
-    scrolls_number = 0 if num < 51 else 3 if num < 101 else 4 + (
-        num - 101) // 50
-    print(scrolls_number)
+        scrolls_number = 0
+        if num == 'all':
+            scrolls_number = 1
+    else:
+        scrolls_number = 0 if num < 51 else 3 if num < 101 else 4 + (
+            num - 101) // 50
+
     scrolls = 0
     while scrolls < scrolls_number:
         driver.execute_script(
@@ -24,10 +27,11 @@ def scroll_to_bottom(driver, previews_number):
         if new_height == last_height:
             break
         last_height = new_height
-        scrolls += 1
+        if num != 'all':
+            scrolls += 1
     else:
         sleep(2)
-        
+
 
 def open_nested_comments(driver):
     while True:

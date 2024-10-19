@@ -4,6 +4,7 @@ from .models.project.artwork import Artwork
 from .models.artist.artist import Artist, Base
 from .models.artist.artwork_preview import Preview
 
+
 class ProcessingInterface(ABC):
 
     @abstractmethod
@@ -17,7 +18,11 @@ class ProcessingInterface(ABC):
     @abstractmethod
     def get_artwork(self, artwork_index: int) -> Artwork:
         ...
-    
+
     @abstractmethod
-    def get_previews(self, previews_number: int) -> list[Preview]:
+    def get_previews(self, previews_number: int | str) -> list[Preview]:
+        ...
+
+    @abstractmethod
+    def get_artworks(self, artworks_number: int | str) -> list[Artwork]:
         ...

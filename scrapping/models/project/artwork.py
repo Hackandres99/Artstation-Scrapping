@@ -7,7 +7,7 @@ from ..software_proficiency import Sofware
 
 @dataclass
 class Artwork:
-    id: str
+    artwork_id: str
     title: str
     description: str
     date: datetime
