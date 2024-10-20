@@ -42,9 +42,29 @@ To make sure this program works correctly on your machine, it is needed to follo
     - **MONGODB_HOST**=the host on your MongoDB Atlas account.
     - **MONGODB_PORT**=the port configured to use on your MongoDB Atlas account, if this is not created the MongoDB default port will be added.
     - **MONGODB_DATABASE**=here the database could be created with your artist, business or the  name you need.
-2. Establish the artist
+2. Configure execution flow:
 
-    On the main.py file there are operations where specifies the artist or author name of which the artworks will be acquired, there are also functions where you can specify the quantity or which artwork you disire to save
+    On the config.yaml file you could fill settings specifiying the artist or author name of which artworks and artwork previews will be acquired:
+
+    **Here you can find the artist id, which is required for every action**
+    ![artist id][artist_id]
+
+    **Here you can find the artwork id, that each preview and artwork will have**
+    ![artist id][artwork_id]
+
+    **Number of previews and artworks**
+    ![artworks and previews enumeration][artworks_previews]
+
+    ### Actions:
+    Depending the number you fill in action, the program will do one action or another:
+
+    1. Get the artist data an save it in the artist mongoDB Atlas collection.
+
+    2. Get the number of previews you desire to save in the preview mongoDB Atlas collection, if you type: 'all' in previews, this action will get all the previews that the artist has.
+
+    3. Get the artwork identifier typed in artwork and save the data in the artwork mongoDB Atlas collection.
+
+    4. Get the number of artworks you desire to save in the artwork mongoDB Atlas collection, if you type: 'all' in artworks, this action will get all the artworks that the artist has.
 
 ## Conclusion
 This program is made to obtain the data of artworks loaded in the profile of an Artstation artist, in an easy and fast way, thanks to the Web-scrapping technique.
@@ -58,3 +78,7 @@ This program is made to obtain the data of artworks loaded in the profile of an 
 [How to install Git?]: https://kinsta.com/es/base-de-conocimiento/instalar-git/
 
 [Get Started with Atlas]: https://www.mongodb.com/docs/atlas/getting-started/
+
+[artist_id]: documentation/artist_id.jpg
+[artwork_id]: documentation/artwork_id.jpg
+[artworks_previews]: documentation/artworks_and_previews.jpg
