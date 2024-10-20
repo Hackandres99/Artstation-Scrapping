@@ -20,7 +20,7 @@ def extract_title(artwork: BeautifulSoup) -> str:
 def extract_description(artwork: BeautifulSoup) -> str:
     description_html = artwork.find(
         'read-more', {'class': 'project-description'}
-    )
+    ).find('p')
     description = description_html.get_text() if description_html else ''
     return description
 

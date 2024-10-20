@@ -3,7 +3,7 @@ from scrapping.MDB_Atlas.operations import Operation
 
 def main():
     operation = Operation('onyricstudio')
-    action = 1
+    action = 4
     
     match action:
         case 1:
